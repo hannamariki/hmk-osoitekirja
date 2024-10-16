@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Alert, TextInput, Button } from 'react-native'; 
 import MapView from 'react-native-maps';
 import { Marker } from 'react-native-maps';
@@ -12,8 +12,15 @@ export default function Map(places) {
   });
 
   const [keyword, setKeyword] = useState("");
+
+  useEffect(() => {
+    if (places.length > 0) {
+      getLocation(places[places.length - 1]); // Hae viimeinen lisätty osoite
+    }
+  }, [places]);
   
-  const getLocation = async () => {
+  const getLocation = async (place) => {
+  
     try {
       let response = await fetch(`https://geocode.maps.co/search?q=${keyword}`); 
       let data = await response.json(); 
@@ -33,10 +40,16 @@ export default function Map(places) {
     }
   };
 
-  const handleFetch = () => {
-    setAddress({ ...address, address: keyword });
-    getLocation(); // kutsuu getLocation-funktiota painiketta painettaessa!!
-  };
+
+
+ // if (places.length > 0) {
+   // getLocation(places[places.length - 1]); // Hae viimeinen lisätty osoite
+  //}
+
+  //const handleFetch = () => {
+    //setAddress({ ...address, address: keyword });
+    //getLocation(); // kutsuu getLocation-funktiota painiketta painettaessa!!
+ // };
 
   
   return (

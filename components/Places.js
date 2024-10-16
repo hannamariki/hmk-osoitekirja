@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { StyleSheet, TextInput, Button, View } from 'react-native';
 
-export default function Places({ addToPlaces, navigation }) {
+export default function Places({ onAddToPlaces, navigation }) {
   const [keyword, setKeyword] = useState("");
 
   const handleSelect = () => {
-   addToPlaces(keyword); // Kutsutaan App-komponentin funktiota
+    console.log("Selected place:", keyword);
+   onAddToPlaces(keyword); // Kutsutaan App-komponentin funktiota
    navigation.navigate('Map');
    setKeyword("");
   };
