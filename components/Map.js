@@ -4,14 +4,14 @@ import MapView from 'react-native-maps';
 import { Marker } from 'react-native-maps';
 
 
-export default function Mapp() {
+export default function Map(places) {
   const [address, setAddress] = useState({
     address: "",
     latitude: null, 
     longitude: null,
   });
 
-  //const [keyword, setKeyword] = useState("");
+  const [keyword, setKeyword] = useState("");
   
   const getLocation = async () => {
     try {
@@ -59,17 +59,7 @@ export default function Mapp() {
           />
         </MapView>
       )}
-     {/* <View style={styles.inputContainer}>
-        <TextInput 
-          style={styles.textInput} 
-          placeholder='keyword' 
-          value={keyword}
-          onChangeText={text => setKeyword(text)} 
-        />
-        <Button title="SHOW" onPress={handleFetch}
-          />
-      </View>
-      */}
+     
     </View>
   );
 }
