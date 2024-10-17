@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { StyleSheet, TextInput, Button, View } from 'react-native';
+import { StyleSheet, TextInput, Button, View, FlatList, Text, } from 'react-native';
 
-export default function Places({ onAddToPlaces, navigation }) {
+export default function Places({ places, onAddToPlaces, navigation }) {
+    console.log('Places data:', places);
   const [keyword, setKeyword] = useState("");
 
   const handleSelect = () => {
@@ -11,6 +12,10 @@ export default function Places({ onAddToPlaces, navigation }) {
    setKeyword("");
   };
 
+  const handleFetch = () => {
+
+  }
+
   return (
     <View style={styles.container}>
       <TextInput 
@@ -19,7 +24,13 @@ export default function Places({ onAddToPlaces, navigation }) {
         value={keyword}
         onChangeText={text => setKeyword(text)} 
       />
-     <Button title="SHOW MAP" onPress={handleSelect} /> 
+     <Button title="SHOW ON MAP" onPress={handleSelect} /> 
+
+     <FlatList 
+        keyExtractor={(item, index) => index.toString()}
+        data={places} 
+        renderItem={({item}) => <Text>{item.address}</Text>} 
+/>
     </View>
   ); 
 }

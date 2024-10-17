@@ -11,18 +11,23 @@ const Stack = createNativeStackNavigator(); // Tämä mahdollistaa eri näyttöj
 export default function App() {
   const [places, setPlaces] = useState([]); // Tila osoitteiden tallentamiselle
 
-  const addToPlaces = (entry) => {
+  const addToPlaces = (entry) => {//funktiolla päivitetään places listaa tallentamalla uusi osoite siihen
     setPlaces([...places, entry]); // Lisää uusi osoite olemassa olevaan lista
+    console.log(places);
   };
   
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Places"> 
         <Stack.Screen name="Places">
-          {props => <Places {...props} onAddToPlaces={addToPlaces} />} 
+          {props => <Places {...props}  places={places} onAddToPlaces={addToPlaces} />} 
+          {/*props tarkoittaa, että kaikki props-objektin avaimet ja arvot siirretään Places-komponentille.
+          places={places} siirtää places tilan places komponenttiin
+          onAddToPlaces siirtää addtoPlaces funktion places komponenttiin
+           */}
         </Stack.Screen>
         <Stack.Screen name="Map">
-          {props => <Map {...props} places={places} />} 
+          {props => <Map {...props} places={places} onAddToPlaces={addToPlaces} />} 
         </Stack.Screen>
       </Stack.Navigator>
       <StatusBar style="auto" /> 

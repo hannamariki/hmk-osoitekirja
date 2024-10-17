@@ -4,7 +4,7 @@ import MapView from 'react-native-maps';
 import { Marker } from 'react-native-maps';
 
 
-export default function Map({places}) {
+export default function Map({places, onAddToPlaces, navigation}) {
   const [address, setAddress] = useState({
     address: "",
     latitude: null, 
@@ -14,7 +14,6 @@ export default function Map({places}) {
   useEffect(() => {
     if (places.length > 0) {
       const lastPlace = places[places.length - 1]; // Hae viimeinen lisätty osoite
-      console.log("Fetching location for:", lastPlace); // Lisää logitus
       getLocation(lastPlace); // Kutsu getLocation funktiota
     }
   }, [places]);
@@ -26,10 +25,11 @@ export default function Map({places}) {
       let data = await response.json(); 
       console.log(data)
 
-      if (data.length > 0) { 
-        const { lat, lon } = data[0]; // otetaan vain ensimmäinen tieto
+      if (data && data.length > 0) { 
+        const { lat, lon} = data[0]; // otetaan vain ensimmäinen tieto
         setAddress({ ...address, latitude: parseFloat(lat), //Api antaa vastauksen merkkijonona, pitää muutta numeroksi jotta toimii!
-          longitude: parseFloat(lon)  }); 
+          longitude: parseFloat(lon),
+        address: place  }); 
        
       } else {
         Alert.alert('No results found'); 
@@ -41,16 +41,17 @@ export default function Map({places}) {
   };
 
 
-
- // if (places.length > 0) {
-   // getLocation(places[places.length - 1]); // Hae viimeinen lisätty osoite
-  //}
-
-  //const handleFetch = () => {
-    //setAddress({ ...address, address: keyword });
-    //getLocation(); // kutsuu getLocation-funktiota painiketta painettaessa!!
- // };
-
+  const handleFetch = () => {
+    if (address.address) { //varmistetaan että osoitteen voi tallentaa
+      onAddToPlaces({address: address.address}); //kutsutaan App-komponentista anAddtoPlaces funktiota joka tallentaa address objektin (eli osoitteen) places taulukkoon
+      //address objektille annetaan yksilöivä avain address, jonka arvo on address.address.
+      //address on tilamuuttuja joka sisältää osoitteen, ja leveys- sekä pituuspiirin tiedot
+      navigation.navigate('Places');
+    } else {
+      Alert.alert('No address to save');
+    }
+  };
+  
   
   return (
     <View style={styles.container}>
@@ -72,7 +73,7 @@ export default function Map({places}) {
           />
         </MapView>
       )}
-     
+      <Button title="SAVE LOCATION" onPress={handleFetch} /> 
     </View>
   );
 }
