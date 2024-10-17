@@ -4,25 +4,25 @@ import MapView from 'react-native-maps';
 import { Marker } from 'react-native-maps';
 
 
-export default function Map(places) {
+export default function Map({places}) {
   const [address, setAddress] = useState({
     address: "",
     latitude: null, 
     longitude: null,
   });
 
-  const [keyword, setKeyword] = useState("");
-
   useEffect(() => {
     if (places.length > 0) {
-      getLocation(places[places.length - 1]); // Hae viimeinen lisätty osoite
+      const lastPlace = places[places.length - 1]; // Hae viimeinen lisätty osoite
+      console.log("Fetching location for:", lastPlace); // Lisää logitus
+      getLocation(lastPlace); // Kutsu getLocation funktiota
     }
   }, [places]);
   
   const getLocation = async (place) => {
   
     try {
-      let response = await fetch(`https://geocode.maps.co/search?q=${keyword}`); 
+      let response = await fetch(`https://geocode.maps.co/search?q=${place}`); 
       let data = await response.json(); 
       console.log(data)
 
