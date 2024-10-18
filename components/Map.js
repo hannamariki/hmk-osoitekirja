@@ -4,7 +4,7 @@ import MapView from 'react-native-maps';
 import { Marker } from 'react-native-maps';
 
 
-export default function Map({route, onAddToPlaces, navigation}) { //route välittää reitiltä tulleet parametrit, tässä tapauksessa osoitteet
+export default function Map({places, route, onAddToPlaces, navigation}) { //route välittää reitiltä tulleet parametrit, tässä tapauksessa osoitteet
 const {address} = route.params || {}; //address: Haetaan reitiltä parametri address. Jos route.params on tyhjät, käytetään tyhjää objektia estämään virhe.
 const [location, setLocation] = useState({
         latitude: null, 
@@ -41,15 +41,15 @@ const [location, setLocation] = useState({
     }
   };
 
-
   const handleFetch = () => {
-    if (address) { //Jos osoite on olemassa kutsutaan onAddToPlaves funktiota
-      onAddToPlaces({address}); //tallennetaan osoite
-      navigation.navigate('Places');
+    if (address) { //Jos osoite on olemassa kutsutaan onAddToPlaces funktiota
+      if(!places.some(places => places.address === address)){ //som() metodilla 
+        onAddToPlaces({address}); //tallennetaan osoite
+        navigation.navigate('Places');
     } else {
       Alert.alert('No address to save');
     }
-  };
+  }};
   
   
   return (
@@ -72,7 +72,7 @@ const [location, setLocation] = useState({
           />
         </MapView>
       )}
-      <Button title="SAVE LOCATION" onPress={handleFetch} /> 
+      <Button title="SAVE LOCATION" onPress={handleFetch}  disabled={places.some(places => places.address === address)}  /> 
     </View>
   );
 }

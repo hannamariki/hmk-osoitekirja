@@ -28,7 +28,7 @@ export default function Places({ places, onAddToPlaces, navigation }) {
       />
       <Button title="SHOW ON MAP" onPress={handleSelect} /> 
   
-      
+      <View>
       <FlatList 
         keyExtractor={(item, index) => index.toString()}
         data={places} 
@@ -38,9 +38,12 @@ export default function Places({ places, onAddToPlaces, navigation }) {
             <Pressable onPress={() => handleFetch(item)}>
               <Text>SHOW ON MAP</Text>
             </Pressable>
-          </View>
+            </View>
+            
         )} 
+    
       />
+      </View>
     </View>
   );
 }
