@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
-import { StyleSheet, TextInput, Button, View, FlatList, Text, Pressable } from 'react-native';
 
-export default function Places({ places, onAddToPlaces, navigation }) {
+import React, { useState } from 'react';
+import { StyleSheet, TextInput, Button, View, FlatList, Text, Pressable, Alert } from 'react-native';
+
+export default function Places({ places, onAddToPlaces, navigation, setPlaces }) {
    // console.log('Places data:', places);
   const [keyword, setKeyword] = useState("");
+ 
 
   const handleSelect = () => {
     //console.log("Selected place:", keyword);
@@ -18,6 +20,27 @@ export default function Places({ places, onAddToPlaces, navigation }) {
         
       });
     };
+    const handleLongPress = (item) => {
+        Alert.alert(
+          "Do you want to remove the address?",
+          "The addres will be deleted permanently",
+          [
+            {
+              text: "CANCEL",
+              style: "CANCEL"
+            },
+            { 
+              text: "OK", 
+              onPress: () => removePlaces(item.address) //popUP-ikkuna
+            }
+          ]
+        );
+      };
+      const removePlaces = (address) => { //https://www.robinwieruch.de/react-remove-item-from-list/
+        const newPlaces = places.filter((item) => item.address !== address); //uusi lista josta poistetaan haluttu osoite
+        setPlaces(newPlaces); // asetetaan uusi lista vanhan listan paikalle, josta puuttuu haluttu osoite
+      };
+
   return (
     <View style={styles.container}>
       <TextInput 
@@ -28,13 +51,13 @@ export default function Places({ places, onAddToPlaces, navigation }) {
       />
       <Button title="SHOW ON MAP" onPress={handleSelect} /> 
   
-      <View>
+     
       <FlatList 
         keyExtractor={(item, index) => index.toString()}
         data={places} 
         renderItem={({ item }) => (
           <View>
-            <Text>{item.address}</Text>
+            <Pressable onLongPress={() => handleLongPress(item)}><Text>{item.address}</Text></Pressable>
             <Pressable onPress={() => handleFetch(item)}>
               <Text>SHOW ON MAP</Text>
             </Pressable>
@@ -43,7 +66,7 @@ export default function Places({ places, onAddToPlaces, navigation }) {
         )} 
     
       />
-      </View>
+     
     </View>
   );
 }

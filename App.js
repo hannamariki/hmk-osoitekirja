@@ -21,7 +21,7 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Places"> 
         <Stack.Screen name="Places">
-          {props => <Places {...props}  places={places} onAddToPlaces={addToPlaces} />} 
+          {props => <Places {...props}  places={places} onAddToPlaces={addToPlaces} setPlaces={setPlaces} />} 
           {/*props tarkoittaa, että kaikki props-objektin avaimet ja arvot siirretään Places-komponentille.
           places={places} siirtää places tilan places komponenttiin
           onAddToPlaces siirtää addtoPlaces funktion places komponenttiin
