@@ -1,22 +1,22 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect,  } from 'react';
 import { StyleSheet, Text, View, Alert, TextInput, Button } from 'react-native'; 
 import MapView from 'react-native-maps';
 import { Marker } from 'react-native-maps';
 
 
-export default function Map({places, onAddToPlaces, navigation}) {
-  const [address, setAddress] = useState({
-    address: "",
-    latitude: null, 
-    longitude: null,
-  });
+export default function Map({route, onAddToPlaces, navigation}) { //route välittää reitiltä tulleet parametrit, tässä tapauksessa osoitteet
+const {address} = route.params || {}; //address: Haetaan reitiltä parametri address. Jos route.params on tyhjät, käytetään tyhjää objektia estämään virhe.
+const [location, setLocation] = useState({
+        latitude: null, 
+        longitude: null,
+    })
 
-  useEffect(() => {
-    if (places.length > 0) {
-      const lastPlace = places[places.length - 1]; // Hae viimeinen lisätty osoite
-      getLocation(lastPlace); // Kutsu getLocation funktiota
+  useEffect(() => { // kun käyttäjä valitsee osoitteen, kutsutaan getLocation funktiota
+    if (address) {
+        getLocation(address);
     }
-  }, [places]);
+  }, [address]);
+
   
   const getLocation = async (place) => {
   
@@ -27,9 +27,10 @@ export default function Map({places, onAddToPlaces, navigation}) {
 
       if (data && data.length > 0) { 
         const { lat, lon} = data[0]; // otetaan vain ensimmäinen tieto
-        setAddress({ ...address, latitude: parseFloat(lat), //Api antaa vastauksen merkkijonona, pitää muutta numeroksi jotta toimii!
-          longitude: parseFloat(lon),
-        address: place  }); 
+        setLocation({ 
+            latitude: parseFloat(lat), //Api antaa vastauksen merkkijonona, pitää muutta numeroksi jotta toimii!
+            longitude: parseFloat(lon),
+        }); 
        
       } else {
         Alert.alert('No results found'); 
@@ -42,10 +43,8 @@ export default function Map({places, onAddToPlaces, navigation}) {
 
 
   const handleFetch = () => {
-    if (address.address) { //varmistetaan että osoitteen voi tallentaa
-      onAddToPlaces({address: address.address}); //kutsutaan App-komponentista anAddtoPlaces funktiota joka tallentaa address objektin (eli osoitteen) places taulukkoon
-      //address objektille annetaan yksilöivä avain address, jonka arvo on address.address.
-      //address on tilamuuttuja joka sisältää osoitteen, ja leveys- sekä pituuspiirin tiedot
+    if (address) { //Jos osoite on olemassa kutsutaan onAddToPlaves funktiota
+      onAddToPlaces({address}); //tallennetaan osoite
       navigation.navigate('Places');
     } else {
       Alert.alert('No address to save');
@@ -55,20 +54,20 @@ export default function Map({places, onAddToPlaces, navigation}) {
   
   return (
     <View style={styles.container}>
-      {address.longitude && address.latitude && (
+      {location.longitude && location.latitude && (
         <MapView
           style={{ width: "100%", height: "80%" }}
           region={{
-            latitude: address.latitude,
-            longitude: address.longitude,
+            latitude: location.latitude,
+            longitude: location.longitude,
             latitudeDelta: 0.0322, 
             longitudeDelta: 0.0221
           }}
         >
           <Marker
             coordinate={{
-              latitude: address.latitude, 
-              longitude: address.longitude
+              latitude: location.latitude, 
+              longitude: location.longitude
             }}
           />
         </MapView>
@@ -77,6 +76,7 @@ export default function Map({places, onAddToPlaces, navigation}) {
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {

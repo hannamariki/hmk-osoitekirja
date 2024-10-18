@@ -11,6 +11,7 @@ const Stack = createNativeStackNavigator(); // Tämä mahdollistaa eri näyttöj
 export default function App() {
   const [places, setPlaces] = useState([]); // Tila osoitteiden tallentamiselle
 
+
   const addToPlaces = (entry) => {//funktiolla päivitetään places listaa tallentamalla uusi osoite siihen
     setPlaces([...places, entry]); // Lisää uusi osoite olemassa olevaan lista
     console.log(places);
