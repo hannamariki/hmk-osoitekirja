@@ -2,14 +2,13 @@
 import React, { useState } from 'react';
 import { StyleSheet, TextInput, Button, View, FlatList, Text, Pressable, Alert } from 'react-native';
 
-export default function Places({ places, onAddToPlaces, navigation, setPlaces }) {
+export default function Places({ places, navigation, setPlaces }) {
    // console.log('Places data:', places);
   const [keyword, setKeyword] = useState("");
  
 
   const handleSelect = () => {
     //console.log("Selected place:", keyword);
-   onAddToPlaces(keyword); // Kutsutaan App-komponentin funktiota, ja välitetään sinne kirjoitettu osoite
    navigation.navigate('Map', {address: keyword}); //siirtyy map komponenttiin ja välittää  address-parametrin, joka sisältää osoitteen (keyword)
    setKeyword("");
   };
@@ -49,36 +48,53 @@ export default function Places({ places, onAddToPlaces, navigation, setPlaces })
         value={keyword}
         onChangeText={text => setKeyword(text)} 
       />
+      <View style={styles.button}>
       <Button title="SHOW ON MAP" onPress={handleSelect} /> 
-  
+      </View>
      
-      <FlatList 
+      <FlatList
         keyExtractor={(item, index) => index.toString()}
-        data={places} 
+        data={places}
         renderItem={({ item }) => (
-          <View>
-            <Pressable onLongPress={() => handleLongPress(item)}><Text>{item.address}</Text></Pressable>
-            <Pressable onPress={() => handleFetch(item)}>
-              <Text>SHOW ON MAP</Text>
+          <View style={styles.row}>
+            <Pressable onLongPress={() => handleLongPress(item)}>
+              <Text style={styles.addressText}>{item.address}</Text>
             </Pressable>
-            </View>
-            
-        )} 
-    
+            <Pressable onPress={() => handleFetch(item)} style={styles.showOnMapButton}>
+              <Text>Show on map</Text>
+            </Pressable>
+          </View>
+        )}
       />
-     
     </View>
   );
 }
 const styles = StyleSheet.create({
-  container: {
-    padding: 20,
-  },
-  textInput: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 10,
-    paddingHorizontal: 10,
-  },
-});
+    container: {
+      padding: 30,
+    },
+    textInput: {
+      height: 40,
+      borderColor: 'gray',
+      borderWidth: 1,
+      marginBottom: 10,
+      paddingHorizontal: 10,
+    },
+    row: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: 10,
+      padding: 10, 
+    },
+    addressText: {
+      flex: 1, 
+      fontSize: 18,
+    },
+    showOnMapButton: {
+      marginLeft: 10, 
+    },
+    button: {
+        padding: 20,
+    }
+  });
