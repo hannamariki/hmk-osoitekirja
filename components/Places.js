@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import { StyleSheet, TextInput, Button, View, FlatList, Text, Pressable, Alert } from 'react-native';
 
 export default function Places({ places, navigation, setPlaces }) {
-   // console.log('Places data:', places);
   const [keyword, setKeyword] = useState("");
  
 
@@ -41,7 +40,9 @@ export default function Places({ places, navigation, setPlaces }) {
       };
 
   return (
+   
     <View style={styles.container}>
+    <Text>PLACEFINDER</Text>
       <TextInput 
         style={styles.textInput} 
         placeholder='Type in address' 
@@ -61,7 +62,7 @@ export default function Places({ places, navigation, setPlaces }) {
               <Text style={styles.addressText}>{item.address}</Text>
             </Pressable>
             <Pressable onPress={() => handleFetch(item)} style={styles.showOnMapButton}>
-              <Text>Show on map</Text>
+              <Text style={styles.showOnMapText}>Show on map</Text>
             </Pressable>
           </View>
         )}
@@ -79,6 +80,11 @@ const styles = StyleSheet.create({
       borderWidth: 1,
       marginBottom: 10,
       paddingHorizontal: 10,
+      borderBottomWidth: 1, 
+      borderBottomColor: 'gray', 
+      borderTopWidth: 0, 
+      borderLeftWidth: 0, 
+      borderRightWidth: 0, 
     },
     row: {
       flexDirection: 'row',
@@ -86,6 +92,9 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       marginBottom: 10,
       padding: 10, 
+      backgroundColor: 'white', // Valkoinen taustaväri
+      padding: 10, // Vähän täytettä
+      width: '100%', // Täyttää koko leveydeltään
     },
     addressText: {
       flex: 1, 
@@ -93,8 +102,14 @@ const styles = StyleSheet.create({
     },
     showOnMapButton: {
       marginLeft: 10, 
+      color: 'light gray', 
+    },
+      showOnMapText: {
+        color: 'gray',
     },
     button: {
         padding: 20,
-    }
+        
+    },
+
   });
